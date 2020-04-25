@@ -10,10 +10,12 @@ import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
+import com.example.router.annotation.Route;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
+@Route("com.example.order.OrderActivity")
 public class OrderActivity extends AppCompatActivity {
     private static final String TAG = "OrderActivity";
     private Button button;

@@ -1,2 +1,2 @@
-include ':app', ':moduleOrder', ':moduleshop', ':interface'
+include ':app', ':moduleOrder', ':moduleshop', ':interface', ':router_complier', ':router_annotation'
 rootProject.name='MyRouterTest'
