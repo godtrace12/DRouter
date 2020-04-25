@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
+import com.example.aninterface.IShopEntry;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -54,6 +55,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button2:
                 Log.e(TAG, "onClick: "+MainActivity.class.getName());
+                //resources -Meta-INF下的服务配置文件，后期应从手动改为apt等方式自动生成?
+                Log.e(TAG, "onClick: module go shop click");
+                ServiceLoader<IShopEntry> spEntry = ServiceLoader.load(IShopEntry.class);
+                Iterator<IShopEntry> iteratorSp = spEntry.iterator();
+                if (iteratorSp.hasNext()){
+                    IShopEntry orderEntryImp = iteratorSp.next();
+                    orderEntryImp.gotoShopEntry(MainActivity.this);
+
+                }else{
+                    Log.e(TAG, "onClick: did not find service iml");
+                }
                 break;
         }
     }
