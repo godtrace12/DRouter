@@ -1,0 +1,2 @@
+include ':app', ':moduleOrder', ':moduleshop', ':interface'
+rootProject.name='MyRouterTest'
