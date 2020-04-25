@@ -34,5 +34,5 @@ dependencies {
     implementation project(':interface')
     implementation project(':moduleOrder')
     implementation project(':moduleshop')
-    implementation project(':router_complier')
+    annotationProcessor project(':router_complier')
 }
