@@ -2,6 +2,7 @@ package com.example.router;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
+import com.example.mvvm.view.MvvMTestActivity;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
     private Button button;
     private Button button2;
+    private Button btnMVTest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +33,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void findViews() {
         button = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
+        btnMVTest = findViewById(R.id.btnMVTest);
         button.setOnClickListener(this);
         button2.setOnClickListener(this);
+        btnMVTest.setOnClickListener(this);
     }
 
     @Override
@@ -66,6 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     Log.e(TAG, "onClick: did not find service iml");
                 }
+                break;
+            case R.id.btnMVTest:
+                Intent intent = new Intent(MainActivity.this, MvvMTestActivity.class);
+                startActivity(intent);
                 break;
         }
     }

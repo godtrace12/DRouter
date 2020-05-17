@@ -25,6 +25,7 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.0.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -35,4 +36,6 @@ dependencies {
     implementation project(':moduleOrder')
     implementation project(':moduleshop')
     annotationProcessor project(':router_complier')
+    implementation project(path: ':router_annotation')
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 }
