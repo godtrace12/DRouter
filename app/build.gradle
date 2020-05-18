@@ -22,6 +22,11 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
+
+    //引入对 DataBinding 的支持
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
