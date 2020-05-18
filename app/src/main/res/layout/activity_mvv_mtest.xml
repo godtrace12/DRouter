@@ -55,13 +55,30 @@
             android:text="加2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_Result2" />
+        <EditText
+            android:id="@+id/tv_Result3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="156dp"
+            android:layout_marginTop="52dp"
+            android:text="@={user.name,default =name_efault}"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_add2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <data>
         <import type="android.view.View" />
+        <import type="com.example.mvvm.model.User"/>
         <variable
             name="countModel2"
             type="com.example.mvvm.viewmodel.CounterViewModel2" />
+        <variable
+            name="user"
+            type="User" />
 
     </data>
 

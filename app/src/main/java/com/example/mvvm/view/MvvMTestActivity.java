@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.mvvm.model.User;
 import com.example.mvvm.viewmodel.CounterViewModel;
 import com.example.mvvm.viewmodel.CounterViewModel2;
 import com.example.router.BR;
@@ -19,6 +21,7 @@ import com.example.router.R;
 import com.example.router.databinding.ActivityMvvMtestBinding;
 
 public class MvvMTestActivity extends AppCompatActivity{
+    private static final String TAG = "MvvMTestActivity";
     private TextView textResult;
     private Button btnAdd;
 
@@ -27,6 +30,7 @@ public class MvvMTestActivity extends AppCompatActivity{
 
     private CounterViewModel mViewModel;
     private CounterViewModel2 mViewModel2;
+    private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class MvvMTestActivity extends AppCompatActivity{
 //        activityMain2Binding.setCountModel2(mViewModel2);
         initViewModel();
         activityMain2Binding.setVariable(BR.countModel2,mViewModel2);
+        activityMain2Binding.setUser(user);
         activityMain2Binding.setLifecycleOwner(this);
         activityMain2Binding.executePendingBindings();
 //        activityMain2Binding.setCountModel2(mViewModel2);
@@ -72,7 +77,9 @@ public class MvvMTestActivity extends AppCompatActivity{
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e(TAG, "onClick: usrName="+user.getName());
                 mViewModel.add();
+                user.setName(user.getName()+"1");
             }
         });
 
