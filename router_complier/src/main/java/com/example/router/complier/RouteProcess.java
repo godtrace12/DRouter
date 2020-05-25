@@ -2,7 +2,11 @@ package com.example.router.complier;
 
 import com.example.router.annotation.Route;
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
@@ -89,9 +93,26 @@ public class RouteProcess extends AbstractProcessor {
         }
 
 
-        TypeSpec autoClass = TypeSpec.classBuilder("MyRouterClass").addModifiers(Modifier.PUBLIC).addField(String.class,"path",Modifier.PUBLIC).build();
+        //成员变量path
+        FieldSpec fieldPath = FieldSpec.builder(String.class,"path",Modifier.PUBLIC).build();
 
-        JavaFile javaFile = JavaFile.builder("com.apt.demo", autoClass).build();
+        //成员变量pathMap
+        ClassName setName = ClassName.get("java.util","HashMap");
+        ClassName stringName = ClassName.get("java.lang","String");
+        TypeName setType = ParameterizedTypeName.get(setName,stringName,stringName);
+        FieldSpec fieldPathMap = FieldSpec.builder(setType,"pathMap",Modifier.PUBLIC).build();
+
+        //构建类
+        TypeSpec routerClass = TypeSpec.classBuilder("MyRouterClass")
+                .addModifiers(Modifier.PUBLIC)
+                .addField(fieldPath)
+                .addField(fieldPathMap)
+                .build();
+
+//        TypeSpec autoClass = TypeSpec.classBuilder("MyRouterClass").addModifiers(Modifier.PUBLIC).addField(String.class,"path",Modifier.PUBLIC).build();
+
+
+        JavaFile javaFile = JavaFile.builder("com.apt.demo", routerClass).build();
         try{
             Filer filer = processingEnv.getFiler();
             javaFile.writeTo(filer);
