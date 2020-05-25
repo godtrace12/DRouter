@@ -11,13 +11,13 @@ import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
-import com.example.mvvm.view.MvvMTestActivity;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
 import javax.security.auth.login.LoginException;
 
+//@Route("com.example.router.MainActivity")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
     private Button button;
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.btnMVTest:
-                Intent intent = new Intent(MainActivity.this, MvvMTestActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, MvvMTestActivity.class);
+//                startActivity(intent);
                 break;
         }
     }

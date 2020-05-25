@@ -24,9 +24,9 @@ android {
     }
 
     //引入对 DataBinding 的支持
-    dataBinding {
-        enabled = true
-    }
+//    dataBinding {
+//        enabled = true
+//    }
 }
 
 dependencies {
