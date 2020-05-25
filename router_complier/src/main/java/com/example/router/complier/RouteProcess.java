@@ -5,12 +5,14 @@ import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -100,13 +102,24 @@ public class RouteProcess extends AbstractProcessor {
         ClassName setName = ClassName.get("java.util","HashMap");
         ClassName stringName = ClassName.get("java.lang","String");
         TypeName setType = ParameterizedTypeName.get(setName,stringName,stringName);
-        FieldSpec fieldPathMap = FieldSpec.builder(setType,"pathMap",Modifier.PUBLIC).build();
+        FieldSpec fieldPathMap = FieldSpec.builder(setType,"pathMap",Modifier.PUBLIC,Modifier.STATIC).build();
+        //成员方法
+        MethodSpec methodAdd = MethodSpec.methodBuilder("addPath")
+                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+                .addParameter(String.class,"path")
+                .addParameter(String.class,"value")
+                .beginControlFlow("if(pathMap == null)")
+                .addStatement("$N = new HashMap()",fieldPathMap)
+                .endControlFlow()
+                .addStatement("$N.put("+"path,value"+")",fieldPathMap)
+                .returns(void.class).build();
 
         //构建类
         TypeSpec routerClass = TypeSpec.classBuilder("MyRouterClass")
                 .addModifiers(Modifier.PUBLIC)
                 .addField(fieldPath)
                 .addField(fieldPathMap)
+                .addMethod(methodAdd)
                 .build();
 
 //        TypeSpec autoClass = TypeSpec.classBuilder("MyRouterClass").addModifiers(Modifier.PUBLIC).addField(String.class,"path",Modifier.PUBLIC).build();
