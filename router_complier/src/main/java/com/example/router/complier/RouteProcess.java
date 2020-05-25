@@ -104,10 +104,10 @@ public class RouteProcess extends AbstractProcessor {
         ClassName setName = ClassName.get("java.util","HashMap");
         ClassName stringName = ClassName.get("java.lang","String");
         TypeName setType = ParameterizedTypeName.get(setName,stringName,stringName);
-        FieldSpec fieldPathMap = FieldSpec.builder(setType,"pathMap",Modifier.PUBLIC,Modifier.STATIC).build();
+        FieldSpec fieldPathMap = FieldSpec.builder(setType,"pathMap").build();
         //成员方法
         MethodSpec methodAdd = MethodSpec.methodBuilder("addPath")
-                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+                .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class,"path")
                 .addParameter(String.class,"value")
                 .beginControlFlow("if(pathMap == null)")
@@ -115,8 +115,8 @@ public class RouteProcess extends AbstractProcessor {
                 .endControlFlow()
                 .addStatement("$N.put("+"path,value"+")",fieldPathMap)
                 .returns(void.class).build();
-        MethodSpec.Builder methodAddBuidler = MethodSpec.methodBuilder("addAllPath")
-                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+        MethodSpec.Builder methodAddBuidler = MethodSpec.methodBuilder("getAllPath")
+                .addModifiers(Modifier.PUBLIC)
                 .beginControlFlow("if(pathMap == null)")
                 .addStatement("$N = new HashMap()",fieldPathMap)
                 .endControlFlow();
