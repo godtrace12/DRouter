@@ -42,5 +42,6 @@ dependencies {
     implementation project(':moduleshop')
     annotationProcessor project(':router_complier')
     implementation project(path: ':router_annotation')
+    implementation project(':router_api')
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 }

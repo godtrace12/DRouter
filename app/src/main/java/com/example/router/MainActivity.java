@@ -11,8 +11,10 @@ import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
+import com.example.router.api.DRouter;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import javax.security.auth.login.LoginException;
@@ -75,6 +77,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnMVTest:
 //                Intent intent = new Intent(MainActivity.this, MvvMTestActivity.class);
 //                startActivity(intent);
+                DRouter.getInstance().init();
+                DRouter.getInstance().inject(this);
+                Map<String,String> routes = DRouter.getInstance().getRoutes();
+                for (Map.Entry<String,String> entry : routes.entrySet()){
+                    Log.e(TAG, "onClick: route="+entry.getValue());
+                }
+                DRouter.getInstance().build("order/OrderActivity").navigation();
                 break;
         }
     }
