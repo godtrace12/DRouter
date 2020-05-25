@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -85,13 +86,14 @@ public class RouteProcess extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         Messager messager = processingEnv.getMessager();
         mMessager.printMessage(Diagnostic.Kind.WARNING,"=======Route annotation processor");
+        HashMap<String,String> mapUrls = new HashMap<>();
         //获取注解
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Route.class);
         for (Element element:elements){
             TypeElement variableElement = (TypeElement) element;
             String fullClassName = variableElement.getQualifiedName().toString();//value
             mMessager.printMessage(Diagnostic.Kind.WARNING, "className ="+fullClassName);
-
+            mapUrls.put(element.getAnnotation(Route.class).value(),fullClassName);
         }
 
 
@@ -113,6 +115,21 @@ public class RouteProcess extends AbstractProcessor {
                 .endControlFlow()
                 .addStatement("$N.put("+"path,value"+")",fieldPathMap)
                 .returns(void.class).build();
+        MethodSpec.Builder methodAddBuidler = MethodSpec.methodBuilder("addAllPath")
+                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+                .beginControlFlow("if(pathMap == null)")
+                .addStatement("$N = new HashMap()",fieldPathMap)
+                .endControlFlow();
+
+        for (Map.Entry<String,String> entry:mapUrls.entrySet()){
+            String key = entry.getKey();
+            String value = entry.getValue();
+            methodAddBuidler.addStatement("pathMap.put($S,$S)",key,value);
+        }
+        methodAddBuidler.addStatement("return $N",fieldPathMap);
+        MethodSpec methodAddAll = methodAddBuidler.returns(ParameterizedTypeName.get(ClassName.get(Map.class)
+                ,ClassName.get(String.class),ClassName.get(String.class))).build();
+
 
         //构建类
         TypeSpec routerClass = TypeSpec.classBuilder("MyRouterClass")
@@ -120,6 +137,7 @@ public class RouteProcess extends AbstractProcessor {
                 .addField(fieldPath)
                 .addField(fieldPathMap)
                 .addMethod(methodAdd)
+                .addMethod(methodAddAll)
                 .build();
 
 //        TypeSpec autoClass = TypeSpec.classBuilder("MyRouterClass").addModifiers(Modifier.PUBLIC).addField(String.class,"path",Modifier.PUBLIC).build();

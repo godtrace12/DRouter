@@ -15,7 +15,7 @@ import com.example.router.annotation.Route;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-@Route("com.example.order.OrderActivity")
+@Route("order/OrderActivity")
 public class OrderActivity extends AppCompatActivity {
     private static final String TAG = "OrderActivity";
     private Button button;
