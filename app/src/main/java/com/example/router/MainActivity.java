@@ -12,8 +12,10 @@ import android.widget.Toast;
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
 import com.example.router.api.DRouter;
+import com.example.router.api.util.ClassUtils;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
@@ -84,6 +86,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.e(TAG, "onClick: route="+entry.getValue());
                 }
                 DRouter.getInstance().build("order/OrderActivity").navigation();
+
+//                List<Class> result = ClassUtils.getAllImplClassesByInterface(TestInterface.class);
+//                for (int i = 0; i < result.size(); i++) {
+//                    Log.e(TAG, "onClick: "+result.get(i).getCanonicalName()+" "+result.get(i).getSimpleName());
+//                }
+
+                List<String> classNames = ClassUtils.getClasses(MainActivity.this,"com.example.router",TestInterface.class);
+                for (int i = 0; i < classNames.size(); i++) {
+                    Log.e(TAG, "onClick: className="+classNames.get(i));
+                }
                 break;
         }
     }
