@@ -120,6 +120,8 @@ private static List<Class> getClassesByPackageName(String packageName) throws IO
                 if (className.matches(regExp)) {
                     Class<?> clazz = Class.forName(className);
                     Log.e(TAG, "getClasses: "+clazz.getName());
+                    //父类.class.isAssignableFrom(子类.class) 调用者为父类，参数为本身或者其子类。
+                    //用于判断继承关系
                     if (clzzInterface.isAssignableFrom(clazz) && !clazz.isInterface()){
                         classes.add(className);
 //                        continue;
