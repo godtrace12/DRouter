@@ -136,4 +136,40 @@ private static List<Class> getClassesByPackageName(String packageName) throws IO
         return classes;
     }
 
+    /**
+     *【说明】：Android获取某一个包名下的，指定接口的实现类。亲测有效
+     *@author daijun
+     *@date 2020/5/26 14:59
+     *@param
+     *@return
+     */
+    public static List<Class> getClassesList(Context mContext, String packageName,Class clzzInterface) {
+        ArrayList<String> classes = new ArrayList<>();
+        ArrayList<Class> classList = new ArrayList<>();
+        try {
+            String packageCodePath = mContext.getPackageCodePath();
+            DexFile df = new DexFile(packageCodePath);
+            String regExp = "^" + packageName + ".\\w+$";
+            for (Enumeration iter = df.entries(); iter.hasMoreElements(); ) {
+                String className = (String) iter.nextElement();
+                if (className.matches(regExp)) {
+                    Class<?> clazz = Class.forName(className);
+                    Log.e(TAG, "getClasses: "+clazz.getName());
+                    //父类.class.isAssignableFrom(子类.class) 调用者为父类，参数为本身或者其子类。
+                    //用于判断继承关系
+                    if (clzzInterface.isAssignableFrom(clazz) && !clazz.isInterface()){
+                        classes.add(className);
+                        classList.add(clazz);
+//                        continue;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return classList;
+    }
+
 }
