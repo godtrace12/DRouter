@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -84,15 +85,21 @@ public class RouteProcess extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        if(set.size() <=0){
+            return false;
+        }
         Messager messager = processingEnv.getMessager();
         mMessager.printMessage(Diagnostic.Kind.WARNING,"=======Route annotation processor");
         HashMap<String,String> mapUrls = new HashMap<>();
         //获取注解
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Route.class);
+        if (elements.size() <=0){
+            return false;
+        }
         for (Element element:elements){
             TypeElement variableElement = (TypeElement) element;
             String fullClassName = variableElement.getQualifiedName().toString();//value
-            mMessager.printMessage(Diagnostic.Kind.WARNING, "className ="+fullClassName);
+            mMessager.printMessage(Diagnostic.Kind.WARNING, "className ="+fullClassName+" elemntSize="+elements.size());
             mapUrls.put(element.getAnnotation(Route.class).value(),fullClassName);
         }
 
@@ -120,19 +127,26 @@ public class RouteProcess extends AbstractProcessor {
                 .beginControlFlow("if(pathMap == null)")
                 .addStatement("$N = new HashMap()",fieldPathMap)
                 .endControlFlow();
-
+        String groupName = "";
         for (Map.Entry<String,String> entry:mapUrls.entrySet()){
+            groupName = entry.getKey();
             String key = entry.getKey();
             String value = entry.getValue();
             methodAddBuidler.addStatement("pathMap.put($S,$S)",key,value);
         }
+        //确定分组名称，如果以“/”能得到分组名称，则以此作为生成的路由名称，若为空，则以跟时间相关的来取名称
+        if (groupName != null && !groupName.isEmpty() && groupName.contains("/")){
+            groupName = groupName.split("/")[0];
+        }else{
+            groupName = System.currentTimeMillis()%100+"";
+        }
         methodAddBuidler.addStatement("return $N",fieldPathMap);
         MethodSpec methodAddAll = methodAddBuidler.returns(ParameterizedTypeName.get(ClassName.get(Map.class)
                 ,ClassName.get(String.class),ClassName.get(String.class))).build();
-
-
-        //构建类
-        TypeSpec routerClass = TypeSpec.classBuilder("MyRouterClass")
+        int randNum = (int) (System.currentTimeMillis()%10);
+        messager.printMessage(Diagnostic.Kind.WARNING,"randomInt"+randNum);
+        //构建类  以下划线作为分隔，以$作为分隔，后面根据包名查找类时匹配有问题
+        TypeSpec routerClass = TypeSpec.classBuilder("MyRouterClass_"+groupName)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(fieldPath)
                 .addField(fieldPathMap)
@@ -143,7 +157,7 @@ public class RouteProcess extends AbstractProcessor {
 //        TypeSpec autoClass = TypeSpec.classBuilder("MyRouterClass").addModifiers(Modifier.PUBLIC).addField(String.class,"path",Modifier.PUBLIC).build();
 
 
-        JavaFile javaFile = JavaFile.builder("com.apt.demo", routerClass).build();
+        JavaFile javaFile = JavaFile.builder("com.apt.demo.routes", routerClass).build();
         try{
             Filer filer = processingEnv.getFiler();
             javaFile.writeTo(filer);

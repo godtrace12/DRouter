@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnMVTest:
 //                Intent intent = new Intent(MainActivity.this, MvvMTestActivity.class);
 //                startActivity(intent);
-                DRouter.getInstance().init();
+//                DRouter.getInstance().init();
+                DRouter.getInstance().init2(getApplicationContext());
                 DRouter.getInstance().inject(this);
                 Map<String,String> routes = DRouter.getInstance().getRoutes();
                 for (Map.Entry<String,String> entry : routes.entrySet()){
@@ -93,10 +94,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    Log.e(TAG, "onClick: "+result.get(i).getCanonicalName()+" "+result.get(i).getSimpleName());
 //                }
 
-                List<String> classNames = ClassUtils.getClasses(MainActivity.this,"com.example.router",TestInterface.class);
-                for (int i = 0; i < classNames.size(); i++) {
-                    Log.e(TAG, "onClick: className="+classNames.get(i));
-                }
+//                List<String> classNames = ClassUtils.getClasses(MainActivity.this,"com.example.router",TestInterface.class);
+//                for (int i = 0; i < classNames.size(); i++) {
+//                    Log.e(TAG, "onClick: className="+classNames.get(i));
+//                }
                 break;
         }
     }

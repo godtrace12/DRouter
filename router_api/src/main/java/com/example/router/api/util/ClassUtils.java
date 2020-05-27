@@ -172,4 +172,69 @@ private static List<Class> getClassesByPackageName(String packageName) throws IO
         return classList;
     }
 
+    /**
+     *【说明】：Android获取某一个包名下的所有实现类
+     *@author daijun
+     *@date 2020/5/26 14:59
+     *@param
+     *@return
+     */
+    public static List<Class> getClassesList(Context mContext, String packageName) {
+        ArrayList<String> classes = new ArrayList<>();
+        ArrayList<Class> classList = new ArrayList<>();
+        try {
+            String packageCodePath = mContext.getPackageCodePath();
+            DexFile df = new DexFile(packageCodePath);
+            String regExp = "^" + packageName + ".\\w+$";
+            for (Enumeration iter = df.entries(); iter.hasMoreElements(); ) {
+                String className = (String) iter.nextElement();
+                if (className.startsWith("com")){
+                    Log.e(TAG, "getClassesList: packName="+className);
+                }
+                if (className.matches(regExp)) {
+                    Class<?> clazz = Class.forName(className);
+                    Log.e(TAG, "getClasses: "+clazz.getName());
+                    classList.add(clazz);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return classList;
+    }
+
+
+    //暂时不用
+    @Deprecated
+    public static List<Class> getClassesFromPackage(Context ctx, String pkgName) {
+        List<Class> rtnList = new ArrayList<>();
+        String[] apkPaths = ctx.getApplicationInfo().splitSourceDirs;// 获得所有的APK的路径
+        DexFile dexfile = null;
+        Enumeration<String> entries = null;
+        String name = null;
+        for (String apkPath : apkPaths) {
+            try {
+                dexfile = new DexFile(apkPath);// 获得编译后的dex文件
+                entries = dexfile.entries();// 获得编译后的dex文件中的所有class
+                while (entries.hasMoreElements()) {
+                    name = (String) entries.nextElement();
+                    if (name.startsWith(pkgName)) {// 判断类的包名是否符合
+                        rtnList.add(Class.forName(name));
+                    }
+                }
+            } catch (ClassNotFoundException | IOException e) {
+            } finally {
+                try {
+                    if (dexfile != null) {
+                        dexfile.close();
+                    }
+                } catch (IOException e) {
+                }
+            }
+        }
+        return rtnList;
+    }
+
 }

@@ -11,6 +11,7 @@ import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -36,14 +37,20 @@ import javax.tools.Diagnostic;
 public class RouterAppServiceProcess extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        if(set.size() <=0){
+            return false;
+        }
         Messager messager = processingEnv.getMessager();
         messager.printMessage(Diagnostic.Kind.WARNING,"========RouterAppService annotation process start");
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(RouterAppService.class);
+        if (elements.size() <=0){
+            return false;
+        }
         List<String> fullClassNameList = new ArrayList<>();
         for(Element element:elements){
             TypeElement variableElement = (TypeElement) element;
             String fullClassName = variableElement.getQualifiedName().toString();
-            messager.printMessage(Diagnostic.Kind.WARNING,"className="+fullClassName);
+            messager.printMessage(Diagnostic.Kind.WARNING,"className="+fullClassName+" elemntSize="+elements.size());
             fullClassNameList.add(fullClassName);
         }
         //构建方法

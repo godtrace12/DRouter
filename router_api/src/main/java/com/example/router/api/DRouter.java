@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.router.api.util.ClassUtils;
 import com.example.router.applife.IAppLifecycleService;
 
 import java.lang.reflect.InvocationTargetException;
@@ -53,6 +54,32 @@ public class DRouter {
             e.printStackTrace();
             return false;
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            return false;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean init2(Context context){
+        try {
+            //将此包名下所有的类实例化，得到路由路径
+            List<Class> routeClassList = ClassUtils.getClassesList(context,"com.apt.demo.routes");
+            for(Class clz : routeClassList){
+                Object routeInstance = clz.newInstance();
+                Method method = clz.getDeclaredMethod("getAllPath");
+                Map<String,String> groupRoutes = (Map<String, String>) method.invoke(routeInstance);
+                routes.putAll(groupRoutes);
+            }
+            return true;
+        }  catch (IllegalAccessException e) {
             e.printStackTrace();
             return false;
         } catch (InstantiationException e) {
