@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
+import com.example.router.annotation.Route;
 import com.example.router.api.DRouter;
 import com.example.router.api.util.ClassUtils;
 
@@ -21,7 +22,7 @@ import java.util.ServiceLoader;
 
 import javax.security.auth.login.LoginException;
 
-//@Route("com.example.router.MainActivity")
+//@Route("main/MainActivity")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
     private Button button;

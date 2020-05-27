@@ -2,6 +2,7 @@ package com.example.applife;
 
 import android.util.Log;
 
+import com.example.router.annotation.RouterAppService;
 import com.example.router.applife.IAppLifecycleService;
 
 /**
@@ -11,6 +12,7 @@ import com.example.router.applife.IAppLifecycleService;
  * @version 2.0
  * @date 2020/5/27 9:59
  */
+@RouterAppService()
 public class OrderAppLifecycleService implements IAppLifecycleService {
     private static final String TAG = "OrderAppLifecycleServic";
     @Override

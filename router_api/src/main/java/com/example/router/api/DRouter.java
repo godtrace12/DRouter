@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.router.applife.IAppLifecycleService;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,4 +87,33 @@ public class DRouter {
         intent.setClassName(context,selRoutePath);
         ((Activity)context).startActivity(intent);
     }
+
+    public List<IAppLifecycleService> getAppServices(){
+        Class<?> clazz = null;
+        List<IAppLifecycleService> serviceList = new ArrayList<>();
+        try {
+            clazz = Class.forName("com.dj.apt.service.DAppServiceClass");
+            Object myRouterInstance = clazz.newInstance();
+            Method methodGetRoutes = clazz.getDeclaredMethod("getAppServices");
+            List<String> serviceNameList= (List<String>) methodGetRoutes.invoke(myRouterInstance);
+            for(String serName:serviceNameList){
+                Class clSer = Class.forName(serName);
+                IAppLifecycleService instance = (IAppLifecycleService) clSer.newInstance();
+                serviceList.add(instance);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return serviceList;
+
+    }
+
 }
