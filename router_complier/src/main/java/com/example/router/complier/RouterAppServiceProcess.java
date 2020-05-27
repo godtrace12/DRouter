@@ -47,11 +47,13 @@ public class RouterAppServiceProcess extends AbstractProcessor {
             return false;
         }
         List<String> fullClassNameList = new ArrayList<>();
+        String groupName = "";
         for(Element element:elements){
             TypeElement variableElement = (TypeElement) element;
             String fullClassName = variableElement.getQualifiedName().toString();
             messager.printMessage(Diagnostic.Kind.WARNING,"className="+fullClassName+" elemntSize="+elements.size());
             fullClassNameList.add(fullClassName);
+            groupName = variableElement.getAnnotation(RouterAppService.class).value();
         }
         //构建方法
         MethodSpec.Builder methodAppBuilder = MethodSpec.methodBuilder("getAppServices")
@@ -62,8 +64,11 @@ public class RouterAppServiceProcess extends AbstractProcessor {
         }
         methodAppBuilder.addStatement("return serviceList");
         MethodSpec methodGetService = methodAppBuilder.returns(ParameterizedTypeName.get(ClassName.get(List.class),ClassName.get(String.class))).build();
+        if (groupName == null || groupName.isEmpty()){
+            groupName = System.currentTimeMillis()%100+"";
+        }
         //构建类
-        TypeSpec serviceClass = TypeSpec.classBuilder("DAppServiceClass")
+        TypeSpec serviceClass = TypeSpec.classBuilder("DAppServiceClass_"+groupName)
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(methodGetService)
                 .build();

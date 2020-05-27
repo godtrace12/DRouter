@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface RouterAppService {
-//    String value();
+    String value();
 }

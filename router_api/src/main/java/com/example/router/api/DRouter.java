@@ -115,14 +115,22 @@ public class DRouter {
         ((Activity)context).startActivity(intent);
     }
 
-    public List<IAppLifecycleService> getAppServices(){
-        Class<?> clazz = null;
+    public List<IAppLifecycleService> getAppServices(Context context){
         List<IAppLifecycleService> serviceList = new ArrayList<>();
+        List<String> serviceNameList = new ArrayList<>();
         try {
-            clazz = Class.forName("com.dj.apt.service.DAppServiceClass");
-            Object myRouterInstance = clazz.newInstance();
-            Method methodGetRoutes = clazz.getDeclaredMethod("getAppServices");
-            List<String> serviceNameList= (List<String>) methodGetRoutes.invoke(myRouterInstance);
+            List<Class> serClassList = ClassUtils.getClassesList(context,"com.dj.apt.service");
+            for(Class clz : serClassList){
+                Object myRouterInstance = clz.newInstance();
+                Method methodGetService = clz.getDeclaredMethod("getAppServices");
+                List<String> serNameList= (List<String>) methodGetService.invoke(myRouterInstance);
+                serviceNameList.addAll(serNameList);
+            }
+//            Class<?> clazz = null;
+//            clazz = Class.forName("com.dj.apt.service.DAppServiceClass");
+//            Object myRouterInstance = clazz.newInstance();
+//            Method methodGetRoutes = clazz.getDeclaredMethod("getAppServices");
+//            List<String> serviceNameList= (List<String>) methodGetRoutes.invoke(myRouterInstance);
             for(String serName:serviceNameList){
                 Class clSer = Class.forName(serName);
                 IAppLifecycleService instance = (IAppLifecycleService) clSer.newInstance();

@@ -188,9 +188,9 @@ private static List<Class> getClassesByPackageName(String packageName) throws IO
             String regExp = "^" + packageName + ".\\w+$";
             for (Enumeration iter = df.entries(); iter.hasMoreElements(); ) {
                 String className = (String) iter.nextElement();
-                if (className.startsWith("com")){
-                    Log.e(TAG, "getClassesList: packName="+className);
-                }
+//                if (className.startsWith("com")){
+//                    Log.e(TAG, "getClassesList: packName="+className);
+//                }
                 if (className.matches(regExp)) {
                     Class<?> clazz = Class.forName(className);
                     Log.e(TAG, "getClasses: "+clazz.getName());

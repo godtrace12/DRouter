@@ -12,7 +12,7 @@ import com.example.router.applife.IAppLifecycleService;
  * @version 2.0
  * @date 2020/5/27 9:50
  */
-//@RouterAppService()
+@RouterAppService(value = "shop")
 public class ShopAppLifecycleService implements IAppLifecycleService {
     private static final String TAG = "ShopAppLifecycleService";
     @Override

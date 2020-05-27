@@ -35,9 +35,11 @@ public class MainApplication extends Application {
         }*/
         //法 2 - 模块初始化，每个模块定义一个接口实现类，用注解获取实现类，然后调用进行初始化
         Log.e(TAG, "onCreate: 使用注解进行初始化");
-        List<IAppLifecycleService> serviceList = DRouter.getInstance().getAppServices();
+        List<IAppLifecycleService> serviceList = DRouter.getInstance().getAppServices(getApplicationContext());
         for (IAppLifecycleService service : serviceList){
             service.onCreate();
         }
+        //路由初始化
+        DRouter.getInstance().init2(getApplicationContext());
     }
 }
