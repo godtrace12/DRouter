@@ -1,0 +1,4 @@
+ext{
+	//true-组件模式  false-集成模式
+	isModule = false
+}
