@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.aninterface.IOrderEntry;
 import com.example.aninterface.IShopEntry;
+import com.example.base.MainApplication;
 import com.example.router.annotation.Route;
 import com.example.router.api.DRouter;
 import com.example.router.api.util.ClassUtils;
@@ -83,7 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (Map.Entry<String,String> entry : routes.entrySet()){
                     Log.e(TAG, "onClick: route="+entry.getValue());
                 }
-                DRouter.getInstance().build("order/OrderActivity").navigation();
+                DRouter.getInstance().build("order/OrderActivity").navigation(new DRouter.NavCallback() {
+                    @Override
+                    public void onLost(String routePath) {
+                        Toast.makeText(MainActivity.this,"路由未找到",Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
         }
     }

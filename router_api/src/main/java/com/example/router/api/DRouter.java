@@ -1,8 +1,10 @@
 package com.example.router.api;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.example.router.api.util.ClassUtils;
 import com.example.router.applife.IAppLifecycleService;
@@ -27,6 +29,7 @@ public class DRouter {
     private Map<String,String> routes = new HashMap<>();
     private String selRoutePath = null;
     private Context context;
+    private NavCallback callback;
 
     private DRouter(){
 
@@ -115,6 +118,22 @@ public class DRouter {
         ((Activity)context).startActivity(intent);
     }
 
+    public void navigation(NavCallback callback){
+        this.callback = callback;
+        try{
+            if(TextUtils.isEmpty(selRoutePath)){
+                throw new ActivityNotFoundException();
+            }
+            Intent intent = new Intent();
+            intent.setClassName(context,selRoutePath);
+            ((Activity)context).startActivity(intent);
+        }catch(ActivityNotFoundException exp){
+            if (callback != null){
+                callback.onLost(selRoutePath);
+            }
+        }
+    }
+
     public List<IAppLifecycleService> getAppServices(Context context){
         List<IAppLifecycleService> serviceList = new ArrayList<>();
         List<String> serviceNameList = new ArrayList<>();
@@ -149,6 +168,10 @@ public class DRouter {
         }
         return serviceList;
 
+    }
+
+    public interface NavCallback{
+        void onLost(String routePath);
     }
 
 }
